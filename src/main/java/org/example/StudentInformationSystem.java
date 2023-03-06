@@ -1,191 +1,97 @@
 package org.example;
 
+import javax.swing.*;
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 
-class Subject {
-
-
-}
-
-class Class {
-
-}
-
-class Student {
-    private String id;
-    private String name;
-    private String username;
-    private String password;
-    private String className;
-    private ArrayList<Subject> subjects = new ArrayList<>();
-
-    public Student(String id, String name, String username, String password, String className) {
-        this.id = id;
-        this.name = name;
-        this.username = username;
-        this.password = password;
-        this.className = className;
-    }
-
-    public String getId() {
-        return id;
-    }
 
 
 
-    public String getName() {
-        return name;
-    }
 
 
 
-    public String getUsername() {
-        return username;
-    }
 
 
 
-    public String getPassword() {
-        return password;
-    }
-
-    public String getClassName() {
-        return className;
-    }
-
-    public ArrayList<Subject> getSubjects() {
-        return subjects;
-    }
-
-    public void setSubjects(ArrayList<Subject> subjects) {
-        this.subjects = subjects;
-    }
-
-    public void unsetSubjects() {
-        this.subjects = null;
-    }
-
-
-}
 
 public class StudentInformationSystem {
     private static Scanner scanner = new Scanner(System.in);
-    private static ArrayList<Student> students = new ArrayList<>();
-    private static ArrayList<Subject> subjects = new ArrayList<>();
-    private static ArrayList<Class> classes = new ArrayList<>();
-    private static File studentFile = new File("students.csv");
-    private static File subjectFile = new File("subjects.csv");
-    private static File classFile = new File("classes.csv");
+
 
     public static void main(String[] args) {
-        loadFiles();
-
-        login();
-
-
-
-    }
-
-    public static void loadFiles() {
-
+        Log logStart  = new Log();
 
     }
 
 
-    private static void login() {
-        System.out.print("\nEnter your username: ");
-        String username = scanner.next();
 
-        System.out.print("Enter your password: ");
-        String password = scanner.next();
-
-        // Check if username and password match a manager account
-        if (username.equals("manager") && password.equals("password")) {
-            managerMenu();
-        }
-        // Check if username and password match a student account
-        else {
-            for (Student student : students) {
-                if (student.getUsername().equals(username) && student.getPassword().equals(password)) {
-                    studentMenu(student);
-                    return;
-                }
-            }
-            System.out.println("\nIncorrect username or password. Please try again.\n");
-        }
-    }
-
-    private static void logout() {
-        System.out.println("\nYou have been logged out.\n");
-        login();
-    }
-
-    private static void managerMenu() {
-        while (true) {
-            int choice = showManagerMenu();
-
-            switch (choice) {
-                case 1:
-                    addStudent();
-                    break;
-                case 2:
-                    editStudent();
-                    break;
-                case 3:
-                    deleteStudent();
-                    break;
-                case 4:
-                    addSubject();
-                    break;
-                case 5:
-                    editSubject();
-                    break;
-                case 6:
-                    deleteSubject();
-                    break;
-                case 7:
-                    addClass();
-                    break;
-                case 8:
-                    editClass();
-                    break;
-                case 9:
-                    deleteClass();
-                    break;
-                case 10:
-                    findStudentById();
-                    break;
-                case 11:
-                    findStudentByName();
-                    break;
-                case 12:
-                    findStudentByClass();
-                    break;
-                case 13:
-                    findSubject();
-                    break;
-                case 14:
-                    findClass();
-                    break;
-                case 15:
-                    updateGrade();
-                    break;
-                case 16:
-                    logout();
-                    break;
-                default:
-                    System.out.println("Invalid choice. Please try again.\n");
-                    break;
-            }
-        }
-    }
+//    private static void managerMenu() {
+//        while (true) {
+//            int choice = showManagerMenu();
+//
+//            switch (choice) {
+//                case 1:
+//                    addStudent();
+//                    break;
+//                case 2:
+//                    editStudent();
+//                    break;
+//                case 3:
+//                    deleteStudent();
+//                    break;
+//                case 4:
+//                    addSubject();
+//                    break;
+//                case 5:
+//                    editSubject();
+//                    break;
+//                case 6:
+//                    deleteSubject();
+//                    break;
+//                case 7:
+//                    addClass();
+//                    break;
+//                case 8:
+//                    editClass();
+//                    break;
+//                case 9:
+//                    deleteClass();
+//                    break;
+//                case 10:
+//                    findStudentById();
+//                    break;
+//                case 11:
+//                    findStudentByName();
+//                    break;
+//                case 12:
+//                    findStudentByClass();
+//                    break;
+//                case 13:
+//                    findSubject();
+//                    break;
+//                case 14:
+//                    findClass();
+//                    break;
+//                case 15:
+//                    updateGrade();
+//                    break;
+//                case 16:
+//
+//                    break;
+//                default:
+//                    System.out.println("Invalid choice. Please try again.\n");
+//                    break;
+//            }
+//        }
+//    }
 
 
     private static int showManagerMenu() {
@@ -288,17 +194,17 @@ public class StudentInformationSystem {
                     viewStudentGrades(student);
                     break;
                 case 3:
-                    viewStudentSchedule(student);
+                    viewStudentClass(student);
                     break;
                 case 4:
-                    registerSubject(student);
+                    registerClass(student);
                     break;
                 case 5:
-                    unregisterSubject(student);
+                    unregisterClass(student);
                     break;
 
                 case 6:
-                    logout();
+
                     break;
                 default:
                     System.out.println("Invalid choice. Please try again.\n");
@@ -329,15 +235,15 @@ public class StudentInformationSystem {
 
     }
 
-    public static void viewStudentSchedule(Student student) {
+    public static void viewStudentClass(Student student) {
 
     }
 
-    public static void registerSubject(Student student) {
+    public static void registerClass(Student student) {
 
     }
 
-    public static void unregisterSubject(Student student) {
+    public static void unregisterClass(Student student) {
 
     }
 
