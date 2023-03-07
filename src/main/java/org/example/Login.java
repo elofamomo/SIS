@@ -1,7 +1,6 @@
 package org.example;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Scanner;
 
 public class Log {
@@ -54,6 +53,7 @@ public class Log {
 
     public static void initStudentSession(String studentId){
         Student student = new Student(studentId);
+        student.studentGreetingSession();
 
 
 
