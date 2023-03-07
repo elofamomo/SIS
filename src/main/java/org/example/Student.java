@@ -129,16 +129,16 @@ class Student {
 
     public static void unregisClass() {
         // list the class name and subject of all class that the student can regis
-        System.out.println("Here the list of all classes you can unregister:");
-        System.out.println(ReadAndSaveData.getClassesNameList());
-        for (String i : registeredClassName) {
-            for (String j : ReadAndSaveData.getClassesNameList()) {
-                if (i.equals(j)) {
-                    System.out.println(i + "-" + ReadAndSaveData.getClassesSubjectNameList().get(ReadAndSaveData.getClassesNameList().indexOf(j)));
-                }
-            }
-
-        }
+//        System.out.println("Here the list of all classes you can unregister:");
+//        System.out.println(ReadAndSaveData.getClassesNameList());
+//        for (String i : registeredClassName) {
+//            for (String j : ReadAndSaveData.getClassesNameList()) {
+//                if (i.equals(j)) {
+//                    System.out.println(i + "-" + ReadAndSaveData.getClassesSubjectNameList().get(ReadAndSaveData.getClassesNameList().indexOf(j)));
+//                }
+//            }
+//
+//        }
 
         System.out.println("Enter the class you want to unregister: ");
         Scanner scanner = new Scanner(System.in);
@@ -150,9 +150,11 @@ class Student {
         } else {
             Class newClass = new Class(unregisClassName);
             newClass.removeStudent(id);
+            int unregisteredIndex = registeredClassName.indexOf(unregisClassName);
             registeredClassName.remove(unregisClassName);
+            System.out.println(registeredSubjectName);
             // subject of the registered class
-            registeredSubjectName.remove(readStudentInfo.getClassesSubjectNameList().get(readStudentInfo.getClassesNameList().indexOf(unregisClassName)));
+            registeredSubjectName.remove(unregisteredIndex);
             registableClassName.add(unregisClassName);
             System.out.println("You unregistered this class successfully!");
         }

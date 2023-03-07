@@ -12,7 +12,7 @@ public class Login {
         welcomeWord();
     }
 
-    public static void welcomeWord () {
+    public static void welcomeWord() {
         System.out.println("Welcome to Student Information System");
         System.out.println("Please choose option below:");
         System.out.println("1. Login");
@@ -27,7 +27,8 @@ public class Login {
             welcomeWord();
         }
     }
-    public static void logIN () {
+
+    public static void logIN() {
         System.out.print("\nEnter your username: ");
         String username = scanner.next();
 
@@ -36,39 +37,39 @@ public class Login {
 
         //load account from file
         ReadAndSaveData accountReader = new ReadAndSaveData();
-        List<String> accountType = accountReader.readAccount(username , password);
+        List<String> accountType = accountReader.readAccount(username, password);
 
 
-        if (accountType.get(0).equals("Manager")){
+        if (accountType.get(0).equals("Manager")) {
 
             initManagerSession(accountType.get(1));
-        }else if(accountType.get(0).equals("Student")){
+        } else if (accountType.get(0).equals("Student")) {
             initStudentSession(accountType.get(1));
-        }else {
+        } else {
             System.out.println(accountType);
             welcomeWord();
         }
 
     }
 
-    public static void initStudentSession(String studentId){
+    public static void initStudentSession(String studentId) {
         Student student = new Student(studentId);
         student.studentGreetingSession();
 
 
-
     }
 
-    public static void initManagerSession(String managerId){
+    public static void initManagerSession(String managerId) {
         Manager manager = new Manager(managerId);
+        manager.managerGreetingSession();
     }
 
 
-
-    public static void logOUT () {
+    public static void logOUT() {
 
     }
-    public static void exit () {
+
+    public static void exit() {
         System.exit(0);
     }
 

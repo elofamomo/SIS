@@ -32,6 +32,7 @@ class Main {
                 String[] attributes = line.split(",");
 
                 studentName.add(attributes[0]);
+                studentName.remove("DungTran");
                 line = br.readLine();
 //                System.out.println(line);
 

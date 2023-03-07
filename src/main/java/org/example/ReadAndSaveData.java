@@ -239,7 +239,11 @@ public class ReadAndSaveData {
         return Arrays.asList(studentsName.get(studentsId.indexOf(id)), studentsUsername.get(studentsId.indexOf(id)), studentsPassword.get(studentsId.indexOf(id)));
     }
 
-    public static Map<String, Float> readGrade() {
-        return null;
+    public static void addStudent(String name, String id, String username, String password) {
+        studentsName.add(name);
+        studentsId.add(id);
+        studentsUsername.add(username);
+        studentsPassword.add(password);
+        saveStudentData(studentPath, studentsName, studentsId, studentsUsername, studentsPassword);
     }
 }

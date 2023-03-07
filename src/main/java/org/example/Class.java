@@ -58,8 +58,8 @@ public class Class {
     }
     public  void removeStudent(String studentId) {
         int index = studentIdList.indexOf(studentId);
-        studentIdList.remove(index);
-        studentNameList.remove(index);
+        studentIdList.remove(studentId);
+        studentNameList.remove(readClassinfo.getStudentInfo(studentId).get(0));
         studentGradesList.remove(index);
 
         // write to file
