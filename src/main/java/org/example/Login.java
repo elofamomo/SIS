@@ -3,12 +3,12 @@ package org.example;
 import java.util.List;
 import java.util.Scanner;
 
-public class Log {
+public class Login {
 
     private static Scanner scanner = new Scanner(System.in);
 
 
-    Log() {
+    Login() {
         welcomeWord();
     }
 

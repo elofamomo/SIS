@@ -1,14 +1,5 @@
 package org.example;
 
-import javax.swing.*;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 
@@ -27,7 +18,8 @@ public class StudentInformationSystem {
 
 
     public static void main(String[] args) {
-        Log logStart  = new Log();
+        // new logging session
+        Login loginStart = new Login();
 
     }
 

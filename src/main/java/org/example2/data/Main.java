@@ -39,6 +39,7 @@ class Main {
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
+        studentName.add(null);
 
         System.out.println(studentName);
 
