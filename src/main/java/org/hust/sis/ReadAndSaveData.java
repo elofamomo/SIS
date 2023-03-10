@@ -1,4 +1,4 @@
-package org.example;
+package org.hust.sis;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -8,6 +8,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+
+import static java.nio.file.StandardOpenOption.APPEND;
 
 public class ReadAndSaveData {
 
@@ -165,6 +167,41 @@ public class ReadAndSaveData {
 
     }
 
+    public static void saveStudentListData(String studentID, String studentName, String studentUsername, String studentPassword) {
+        Path studentPath = Paths.get("studentAccount.csv");
+        studentsName.add(studentName);
+        studentsId.add(studentID);
+        studentsUsername.add(studentUsername);
+        studentsPassword.add(studentPassword);
+
+        try (BufferedWriter bw = Files.newBufferedWriter(studentPath, StandardCharsets.UTF_8, APPEND)) {
+            bw.write(studentName + "," + studentID + "," + studentUsername + "," + studentPassword);
+            bw.newLine();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+
+
+    }
+
+    public static void deleteStudentListData(String studentID) {
+        Path studentPath = Paths.get("studentAccount.csv");
+        int removeIndex = studentsId.indexOf(studentID);
+        studentsId.remove(studentID);
+        studentsName.remove(removeIndex);
+        studentsUsername.remove(removeIndex);
+        studentsPassword.remove(removeIndex);
+        for (int i = 0; i < studentsName.size(); i++) {
+            try (BufferedWriter bw = Files.newBufferedWriter(studentPath, StandardCharsets.UTF_8)) {
+                bw.write(studentsName.get(i) + "," + studentsId.get(i) + "," + studentsUsername.get(i) + "," + studentsPassword.get(i));
+                bw.newLine();
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+            }
+        }
+
+    }
+
     public static List<String> readStudentsIdOfAClass(String className) {
         List<String> studentsIdOfAClass = new ArrayList<>();
         for (int i = 0; i < classNameGrades.size(); i++) {
@@ -239,11 +276,5 @@ public class ReadAndSaveData {
         return Arrays.asList(studentsName.get(studentsId.indexOf(id)), studentsUsername.get(studentsId.indexOf(id)), studentsPassword.get(studentsId.indexOf(id)));
     }
 
-    public static void addStudent(String name, String id, String username, String password) {
-        studentsName.add(name);
-        studentsId.add(id);
-        studentsUsername.add(username);
-        studentsPassword.add(password);
-        saveStudentData(studentPath, studentsName, studentsId, studentsUsername, studentsPassword);
-    }
+
 }
