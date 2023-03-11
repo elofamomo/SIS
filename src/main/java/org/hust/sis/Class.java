@@ -8,7 +8,7 @@ import java.util.List;
 public class Class {
    private String classCode;
    private String classSubject;
-   private Map<>
+//   private Map<>
 
    public Class(String classCode , String classSubject) {
        this.classCode = classCode;
@@ -19,9 +19,14 @@ public class Class {
    public String getClassCode() {
        return classCode;
    }
+   public String getClassSubject() {
+       return classSubject;
+   }
 
-
-
-
-
+    public void setClassCode(String classCode) {
+        this.classCode = classCode;
+    }
+    public void setClassSubject(String classSubject) {
+        this.classSubject = classSubject;
+    }
 }
