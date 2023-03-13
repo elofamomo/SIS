@@ -7,10 +7,10 @@ import java.util.List;
 
 public class Class {
    private String classCode;
-   private String classSubject;
+   private Subject classSubject;
 //   private Map<>
 
-   public Class(String classCode , String classSubject) {
+   public Class(String classCode , Subject classSubject) {
        this.classCode = classCode;
        this.classSubject = classSubject;
 
@@ -19,14 +19,14 @@ public class Class {
    public String getClassCode() {
        return classCode;
    }
-   public String getClassSubject() {
+   public Subject getClassSubject() {
        return classSubject;
    }
 
     public void setClassCode(String classCode) {
         this.classCode = classCode;
     }
-    public void setClassSubject(String classSubject) {
+    public void setClassSubject(Subject classSubject) {
         this.classSubject = classSubject;
     }
 }

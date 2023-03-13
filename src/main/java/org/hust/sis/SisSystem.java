@@ -1,5 +1,7 @@
 package org.hust.sis;
 
+import org.hust.sis.dao.SisDataAccess;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,10 +14,16 @@ public class SisSystem {
 
     private List<Class> previousSemesterClasses;
 
-    private Map<User, List<Class>> achievedClasses;
+    private Map<User, List<Map<Class , Float>>> achievedClasses;
 
 
     private Map<User, List<Class>> enrollment;
+
+    private SisDataAccess sisDAO;
+
+    public SisSystem(SisDataAccess sisDAO) {
+        this.sisDAO = sisDAO;
+    }
 
 
     public SisSystem() {
@@ -36,22 +44,19 @@ public class SisSystem {
     }
 
     public void addUser(User user) {
-        this.users.add(user);
+        // check abc
+         this.sisDAO.addUser(user);
     }
 
-    public void addClass(Class class1) {
-        this.classes.add(class1);
+    public void addClass(Class clazz) {
+        // check ...
+        this.sisDAO.addClass(clazz);
     }
 
-
-    public List<User> getUsers() {
-        return this.users;
-    }
 
     public User login(String username, String password) {
-        for (User user : this.users) {
+        for (User user : sisDAO.getUsers()) {
             if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
-
                 return user;
             }
         }
@@ -123,7 +128,8 @@ public class SisSystem {
     }
 
     public void updateStudentGrades(Student student, Class class1, Float grade) {
-        student.updateGradesOfAClass(class1, grade);
+
+
     }
 
     public void showGradesOfAStudent(Student student) {
@@ -138,7 +144,7 @@ public class SisSystem {
     }
 
     public Student findStudentByID(String id) {
-        for (User user : users) {
+        for (User user : sisDAO.getUsers()) {
             if (user instanceof Student) {
                 if (user.getID().equals(id)) {
                     return (Student) user;
@@ -158,7 +164,7 @@ public class SisSystem {
     }
 
     public Student findStudentByName(String name) {
-        for (User user : users) {
+        for (User user : sisDAO.getUsers()) {
             if (user instanceof Student) {
                 if (user.getName().equals(name)) {
                     return (Student) user;
@@ -169,6 +175,7 @@ public class SisSystem {
     }
 
     public void deleteStudent(Student student) {
+        // TODO: sua tai DAO
         users.remove(student);
     }
 
@@ -177,7 +184,7 @@ public class SisSystem {
     }
 
     public void addSubject(Subject subject) {
-        subjects.add(subject);
+        sisDAO.addSubject(subject);
     }
 
     public void deleteSubject(Subject subject) {
@@ -214,6 +221,32 @@ public class SisSystem {
 
 
         return students2;
+    }
+    public Subject convertSubjectNameToSubject(String subjectName) {
+        for (Subject subject : subjects) {
+            if (subject.getSubjectName().equals(subjectName)){
+                return subject;
+            }
+        }
+        return null;
+    }
+    public Subject convertSubjectCodeToSubject(String subjectCode) {
+        for (Subject subject : subjects) {
+            if (subject.getSubjectCode().equals(subjectCode)){
+                return subject;
+            }
+        }
+        return null;
+    }
+
+    public List<Class> getClassesListByASubject(Subject subject) {
+        List<Class> classesBySubject = new ArrayList<>();
+        for (Class class1 : classes) {
+            if (class1.getClassSubject().equals(subject)) {
+                classesBySubject.add(class1);
+            }
+        }
+        return classesBySubject;
     }
 
 
