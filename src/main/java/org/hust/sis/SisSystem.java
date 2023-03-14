@@ -3,46 +3,21 @@ package org.hust.sis;
 import org.hust.sis.dao.SisDataAccess;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class SisSystem {
-    private List<User> users;
-    private List<Class> classes;
-    private List<Subject> subjects;
-
-    private List<Class> previousSemesterClasses;
-
-    private Map<User, List<Map<Class , Float>>> achievedClasses;
-
-
-    private Map<User, List<Class>> enrollment;
 
     private SisDataAccess sisDAO;
 
     public SisSystem(SisDataAccess sisDAO) {
         this.sisDAO = sisDAO;
     }
-
-
-    public SisSystem() {
-        this.users = new ArrayList<>();
-        this.classes = new ArrayList<>();
-        this.subjects = new ArrayList<>();
-        this.enrollment = new HashMap<>();
-        this.achievedClasses = new HashMap<>();
-        this.previousSemesterClasses = new ArrayList<>();
-    }
-
-
     public void showInformation(User user) {
         System.out.println("Your information");
-        System.out.println("Name: " + user.getName());
-        System.out.println("ID: " + user.getID());
-
+        System.out.println("Name: " + sisDAO.getUserName(user));
+        System.out.println("ID: " + sisDAO.getUserID(user));
     }
-
     public void addUser(User user) {
         // check abc
          this.sisDAO.addUser(user);
@@ -64,11 +39,7 @@ public class SisSystem {
         return null;
     }
 
-    //    public void showClasses(User user) {
-//        for (String classCode : this.classes) {
-//            System.out.println(classCode);
-//        }
-//    }
+
     public void showUnenrolledClasses(User user) {
 
     }
@@ -78,49 +49,26 @@ public class SisSystem {
     }
 
     public List<String> getUnenrolledClassesByUser(User user) {
-        List<String> unEnrolledClasses = new ArrayList<>();
-        for (Class i : classes) {
-            if (!enrollment.getOrDefault(user, new ArrayList<>()).contains(i)) {
-                unEnrolledClasses.add(i.getClassCode());
-            }
-        }
-        return unEnrolledClasses;
+        return sisDAO.getUnenrolledClassesByUser(user);
     }
 
     public void enroll(User user, Class class1) {
-        enrollment.computeIfAbsent(user, k -> new ArrayList<>()).add(class1);
+        sisDAO.enroll(user, class1);
     }
 
     public void disenroll(User user, Class class1) {
-        enrollment.computeIfAbsent(user, k -> new ArrayList<>()).remove(class1);
+        sisDAO.disenroll(user, class1);
     }
 
     public List<Class> getClassesByUser(User user) {
 
-        return enrollment.getOrDefault(user, new ArrayList<>());
+        return sisDAO.getClassesByUser(user);
     }
 
     public List<String> getCLassesCodeByUser(User user) {
-        List<String> classesIDByUser = new ArrayList<>();
-        for (Class i : enrollment.getOrDefault(user, new ArrayList<>())) {
-            classesIDByUser.add(i.getClassCode());
-        }
-        return classesIDByUser;
+        return sisDAO.getClassesCodeByUser(user);
     }
 
-    public Class convertClassCodetoClass(String classCode1) {
-        List<Class> allClasses = new ArrayList<>();
-        allClasses.addAll(classes);
-        allClasses.addAll(previousSemesterClasses);
-        for (Class i : allClasses) {
-            String j = i.getClassCode();
-            if (j.equals(classCode1)) {
-                return i;
-            }
-
-        }
-        return null;
-    }
 
     public Map<Class, Float> getGradesOfAStudent(Student student) {
 
@@ -132,16 +80,27 @@ public class SisSystem {
 
     }
 
+    public Subject convertSubjectNameToSubject(String subjectName) {
+        return sisDAO.convertSubjectNameToSubject(subjectName);
+    }
+
+    public Subject convertSubjectCodeToSubject(String subjectCode) {
+       return sisDAO.convertSubjectCodeToSubject(subjectCode);
+    }
+
+    public Class convertClassCodetoClass(String classCode1) {
+        return sisDAO.convertClassCodetoClass(classCode1);
+    }
+
     public void showGradesOfAStudent(Student student) {
-        Map<Class, Float> grades = student.getGrades();
-        for (Map.Entry<Class, Float> entry : grades.entrySet()) {
-            System.out.println(entry.getKey().getClassCode() + " - " + entry.getKey().getClassSubject() + " " + entry.getValue());
+        for (Map.Entry<String, Float> entry : sisDAO.getGradesOfAStudent(student).entrySet()) {
+            System.out.println(entry.getKey() + " - " + entry.getValue());
         }
     }
 
-    public void addPreviousSemesterClass(Class class1) {
-        previousSemesterClasses.add(class1);
-    }
+//    public void addPreviousSemesterClass(Class class1) {
+//        previousSemesterClasses.add(class1);
+//    }
 
     public Student findStudentByID(String id) {
         for (User user : sisDAO.getUsers()) {
@@ -155,12 +114,7 @@ public class SisSystem {
     }
 
     public Class findClassByCode(String code) {
-        for (Class class1 : classes) {
-            if (class1.getClassCode().equals(code)) {
-                return class1;
-            }
-        }
-        return null;
+        return sisDAO.findClassByCode(code);
     }
 
     public Student findStudentByName(String name) {
@@ -176,11 +130,11 @@ public class SisSystem {
 
     public void deleteStudent(Student student) {
         // TODO: sua tai DAO
-        users.remove(student);
+        sisDAO.deleteStudent(student);
     }
-
+//
     public void deleteClass(Class class1) {
-        classes.remove(class1);
+        sisDAO.deleteClass(class1);
     }
 
     public void addSubject(Subject subject) {
@@ -188,66 +142,32 @@ public class SisSystem {
     }
 
     public void deleteSubject(Subject subject) {
-        subjects.remove(subject);
+        sisDAO.deleteSubject(subject);
     }
 
     public void showAllSubjects() {
-        for (Subject subject : subjects) {
-            System.out.println(subject.getSubjectCode() + " - " + subject.getSubjectName());
-
-
-        }
+      sisDAO.showAllSubjects();
     }
 
     public Subject findSubjectByCode(String code) {
-        for (Subject subject : subjects) {
-            if (subject.getSubjectCode().equals(code)) {
-                return subject;
-            }
-        }
-        return null;
+        return sisDAO.findSubjectByCode(code);
     }
 
 
     public List<Student> findStudentsByClass(Class class1) {
-        List<Student> students2 = new ArrayList<>();
-        for (User user : enrollment.keySet()) {
-            if (user instanceof Student) {
-                if (enrollment.get(user).contains(class1)) {
-                    students2.add((Student) user);
-                }
-            }
-        }
-
-
-        return students2;
-    }
-    public Subject convertSubjectNameToSubject(String subjectName) {
-        for (Subject subject : subjects) {
-            if (subject.getSubjectName().equals(subjectName)){
-                return subject;
-            }
-        }
-        return null;
-    }
-    public Subject convertSubjectCodeToSubject(String subjectCode) {
-        for (Subject subject : subjects) {
-            if (subject.getSubjectCode().equals(subjectCode)){
-                return subject;
-            }
-        }
-        return null;
+        return sisDAO.findStudentByClass(class1);
     }
 
-    public List<Class> getClassesListByASubject(Subject subject) {
-        List<Class> classesBySubject = new ArrayList<>();
-        for (Class class1 : classes) {
-            if (class1.getClassSubject().equals(subject)) {
-                classesBySubject.add(class1);
-            }
-        }
-        return classesBySubject;
-    }
+
+//    public List<Class> getClassesListByASubject(Subject subject) {
+//        List<Class> classesBySubject = new ArrayList<>();
+//        for (Class class1 : classes) {
+//            if (class1.getClassSubject().equals(subject)) {
+//                classesBySubject.add(class1);
+//            }
+//        }
+//        return classesBySubject;
+//    }
 
 
 }

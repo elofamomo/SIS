@@ -9,23 +9,29 @@ public class Main {
 
     private static final SisSystem system;
 
-    static {
-        SisDataAccess sisDAO = new CsvFileSisDataAccess();
 
-        sisDAO.addUser(new Student("Truong The Dung", "20182451", "dungtt76", "dungtt76"));
+    static {
+        SisDataAccess sisDAO = new InMemorySisDataAccess();
+        Student student = new Student("Truong The Dung", "20182451", "dungtt76", "dungtt76");
+
+        sisDAO.addUser(student);
         sisDAO.addUser(new Manager("Truong Thi Huong Huong", "11360", "huongdouble", "huongdouble"));
 
         sisDAO.addSubject(new Subject("ET", "Electronic Technology"));
         sisDAO.addSubject(new Subject("IT", "Information Technology"));
         sisDAO.addSubject(new Subject("BE", "Biology Engineering"));
 
-//        sisDAO.addClass(new Class("ET2010", system.convertSubjectNameToSubject("ET")));
-//        sisDAO.addClass(new Class("IT2010", system.convertSubjectCodeToSubject("IT")));
-//        sisDAO.addClass(new Class("BE2010", system.convertSubjectCodeToSubject("BE")));
-//
-//        sisDAO.addClass(new Class("ET2009", system.convertSubjectCodeToSubject("ET")));
-//        sisDAO.addClass(new Class("IT2009", system.convertSubjectCodeToSubject("IT")));
-//        sisDAO.addClass(new Class("BE2009", system.convertSubjectNameToSubject("BE")));
+
+        sisDAO.addClass(new Class("ET2010", sisDAO.convertSubjectCodetoSubject("ET")));
+        sisDAO.addClass(new Class("IT2010", sisDAO.convertSubjectCodetoSubject("IT")));
+        sisDAO.addClass(new Class("BE2010", sisDAO.convertSubjectCodetoSubject("BE")));
+        sisDAO.addPreviousSemesterClass(new Class("ET2009", sisDAO.convertSubjectCodetoSubject("ET")));
+        sisDAO.addPreviousSemesterClass(new Class("IT2009", sisDAO.convertSubjectCodetoSubject("IT")));
+        sisDAO.addPreviousSemesterClass(new Class("BE2009", sisDAO.convertSubjectCodetoSubject("BE")));
+
+        sisDAO.updateStudentGrades(student, sisDAO.convertClassCodetoClass("ET2009"), 10.0f);
+        sisDAO.updateStudentGrades(student, sisDAO.convertClassCodetoClass("IT2009"), 9.0f);
+        sisDAO.updateStudentGrades(student, sisDAO.convertClassCodetoClass("BE2009"), 8.0f);
 
         system = new SisSystem(sisDAO);
     }
@@ -61,9 +67,6 @@ public class Main {
 
                         // create default previous semester grades data '
                         Student student = (Student) user1;
-                        system.updateStudentGrades(student, system.convertClassCodetoClass("ET2009"), 10.0f);
-                        system.updateStudentGrades(student, system.convertClassCodetoClass("IT2009"), 9.0f);
-                        system.updateStudentGrades(student, system.convertClassCodetoClass("BE2009"), 8.0f);
 
 
                         while (true) {
@@ -262,10 +265,15 @@ public class Main {
                                     System.out.println("Fill the new class info:");
                                     System.out.println("Class ID:");
                                     String newClassID = scanner.next();
-                                    System.out.println("Class subject:");
+                                    System.out.println("Class subject code :");
                                     scanner.nextLine();
                                     String newClassSubject = scanner.nextLine();
-//                                    system.addClass(new Class(newClassID, newClassSubject));
+                                    Subject subject = system.convertSubjectCodeToSubject(newClassSubject);
+                                    if (subject != null && ) {
+                                        system.addClass(new Class(newClassID, subject));
+                                    } else {
+                                        System.out.println("Invalid subject code or the class ID is incorrect format");
+                                    }
                                     break;
                                 case "5":
                                     System.out.println("Fill the class code you want to edit:");

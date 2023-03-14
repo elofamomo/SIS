@@ -29,4 +29,5 @@ public class Class {
     public void setClassSubject(Subject classSubject) {
         this.classSubject = classSubject;
     }
+
 }

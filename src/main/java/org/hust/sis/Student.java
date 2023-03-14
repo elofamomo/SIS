@@ -13,7 +13,7 @@ public class Student extends User{
         super(name, ID, username, password);
         this.grades = new HashMap<>();
     }
-    public Map<Class, Float> getGrades() {
+    public Map<Class, Float>  getGrades() {
         return grades;
     }
 
