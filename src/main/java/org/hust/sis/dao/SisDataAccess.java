@@ -30,10 +30,18 @@ public interface SisDataAccess {
     Map<String, Float> getGradesOfAStudent(Student student);
 
     List<User> getUsers();
+    List<Class> getClasses();
+    List<Subject> getSubjects();
+
     void deleteSubject(Subject subject);
+
     List<Student> findStudentsByClass(Class class1);
-    public Subject convertSubjectNameToSubject(String subjectName);
-    public Subject convertSubjectCodeToSubject(String subjectCode);
+    void addGrades(Student student, Class class1, Float grade);
+
+    Subject convertSubjectNameToSubject(String subjectName);
+
+
+    List<Student> findStudentByClass(Class class1);
 
     List<Class> getClassesByUser(User user);
 

@@ -1,6 +1,7 @@
 package org.hust.sis;
 
 import org.hust.sis.dao.InMemorySisDataAccess;
+import org.hust.sis.dao.SQLiteDBFileSisDataAccess;
 import org.hust.sis.dao.SisDataAccess;
 
 import java.util.Scanner;
@@ -11,27 +12,25 @@ public class Main {
 
 
     static {
-        SisDataAccess sisDAO = new InMemorySisDataAccess();
-        Student student = new Student("Truong The Dung", "20182451", "dungtt76", "dungtt76");
-
-        sisDAO.addUser(student);
-        sisDAO.addUser(new Manager("Truong Thi Huong Huong", "11360", "huongdouble", "huongdouble"));
-
-        sisDAO.addSubject(new Subject("ET", "Electronic Technology"));
-        sisDAO.addSubject(new Subject("IT", "Information Technology"));
-        sisDAO.addSubject(new Subject("BE", "Biology Engineering"));
+        SisDataAccess sisDAO = new SQLiteDBFileSisDataAccess();
 
 
-        sisDAO.addClass(new Class("ET2010", sisDAO.convertSubjectCodetoSubject("ET")));
-        sisDAO.addClass(new Class("IT2010", sisDAO.convertSubjectCodetoSubject("IT")));
-        sisDAO.addClass(new Class("BE2010", sisDAO.convertSubjectCodetoSubject("BE")));
-        sisDAO.addPreviousSemesterClass(new Class("ET2009", sisDAO.convertSubjectCodetoSubject("ET")));
-        sisDAO.addPreviousSemesterClass(new Class("IT2009", sisDAO.convertSubjectCodetoSubject("IT")));
-        sisDAO.addPreviousSemesterClass(new Class("BE2009", sisDAO.convertSubjectCodetoSubject("BE")));
+//        sisDAO.addUser(student);
+//        sisDAO.addUser(new Manager("Truong Thi Huong Huong", "11360", "huongdouble", "huongdouble"));
+//
 
-        sisDAO.updateStudentGrades(student, sisDAO.convertClassCodetoClass("ET2009"), 10.0f);
-        sisDAO.updateStudentGrades(student, sisDAO.convertClassCodetoClass("IT2009"), 9.0f);
-        sisDAO.updateStudentGrades(student, sisDAO.convertClassCodetoClass("BE2009"), 8.0f);
+//
+//
+
+//
+//        sisDAO.addPreviousSemesterClass(new Class("ET2009", sisDAO.convertSubjectCodetoSubject("ET")));
+//        sisDAO.addPreviousSemesterClass(new Class("IT2009", sisDAO.convertSubjectCodetoSubject("IT")));
+//        sisDAO.addPreviousSemesterClass(new Class("BE2009", sisDAO.convertSubjectCodetoSubject("BE")));
+//
+//        sisDAO.enroll(student2 , sisDAO.convertClassCodetoClass("ET2010"));
+//        sisDAO.updateStudentGrades(student, sisDAO.convertClassCodetoClass("ET2009"), 10.0f);
+//        sisDAO.updateStudentGrades(student, sisDAO.convertClassCodetoClass("IT2009"), 9.0f);
+//        sisDAO.updateStudentGrades(student, sisDAO.convertClassCodetoClass("BE2009"), 8.0f);
 
         system = new SisSystem(sisDAO);
     }
@@ -168,7 +167,9 @@ public class Main {
                                     String newStudentUsername = scanner.next();
                                     System.out.println("Student password:");
                                     String newStudentPassword = scanner.next();
-                                    system.addUser(new Student(newStudentName, newStudentID, newStudentUsername, newStudentPassword));
+                                    if (system.checkExistingUser(newStudentID, newStudentUsername)) {
+                                        system.addUser(new Student(newStudentName, newStudentID, newStudentUsername, newStudentPassword));
+                                    }
                                     break;
                                 case "2":
                                     System.out.println("Please select the student you want to edit");
@@ -194,13 +195,16 @@ public class Main {
 
                                             System.out.print("New student name:");
                                             String newStudentName1 = scanner.nextLine();
-                                            student1.setName(newStudentName1);
 //                                        scanner.nextLine();
 
                                             System.out.print("New student ID:");
                                             String newStudentID1 = scanner.next();
-
-                                            student1.setID(newStudentID1);
+                                            if (system.checkExistingUser(newStudentID1 , student1.getUsername() )){
+                                            student1.setName(newStudentName1);
+                                            student1.setID(newStudentID1);}
+                                            else {
+                                                System.out.println("The student ID is existing");
+                                            }
                                             break;
 
                                         case "2":
@@ -265,11 +269,8 @@ public class Main {
                                     System.out.println("Fill the new class info:");
                                     System.out.println("Class ID:");
                                     String newClassID = scanner.next();
-                                    System.out.println("Class subject code :");
-                                    scanner.nextLine();
-                                    String newClassSubject = scanner.nextLine();
-                                    Subject subject = system.convertSubjectCodeToSubject(newClassSubject);
-                                    if (subject != null && ) {
+                                    Subject subject = system.convertSubjectCodetoSubject(newClassID.substring(0, 2));
+                                    if (subject != null && system.checkExistingClassId(newClassID)) {
                                         system.addClass(new Class(newClassID, subject));
                                     } else {
                                         System.out.println("Invalid subject code or the class ID is incorrect format");
@@ -286,14 +287,16 @@ public class Main {
                                     }
                                     System.out.println("The class info now:");
                                     System.out.println("Class ID: " + class1.getClassCode());
-                                    System.out.println("Class subject: " + class1.getClassSubject());
+                                    System.out.println("Class subject: " + class1.getClassSubject().getSubjectName());
                                     System.out.println("New class ID:");
                                     String newClassID1 = scanner.next();
-                                    class1.setClassCode(newClassID1);
                                     System.out.println("New class subject:");
-                                    scanner.nextLine();
-                                    String newClassSubject1 = scanner.nextLine();
-//                                    class1.setClassSubject(newClassSubject1);
+                                    Subject newClassSubject1 = system.convertSubjectCodetoSubject(newClassID1.substring(0, 2));
+                                    if (newClassSubject1 != null && system.checkExistingClassId(newClassID1)) {
+                                        class1.setClassCode(newClassID1);
+                                        class1.setClassSubject(newClassSubject1);
+                                    }else {
+                                        System.out.println("This class ID is existing");}
                                     break;
 
                                 case "6":
@@ -316,7 +319,11 @@ public class Main {
                                     System.out.println("Subject name:");
                                     scanner.nextLine();
                                     String newSubjectName = scanner.nextLine();
-                                    system.addSubject(new Subject(newSubjectCode, newSubjectName));
+                                    if (system.checkExistingSubjectCode(newSubjectCode) && system.checkExistingSubjectName(newSubjectName)) {
+                                        system.addSubject(new Subject(newSubjectCode, newSubjectName));
+                                    } else {
+                                        System.out.println("The subject you want to add may be existing");
+                                    }
                                     break;
 
                                 case "8":
@@ -386,7 +393,6 @@ public class Main {
                                     break;
 
                                 case "12":
-                                    //TODO: Need to make a test
                                     System.out.println("Please fill the class code you want to find student");
                                     String classCode = scanner.next();
                                     Class class3 = system.findClassByCode(classCode);
@@ -395,6 +401,8 @@ public class Main {
                                         break;
                                     }
                                     for (Student students : system.findStudentsByClass(class3)) {
+                                        int studentIndex = 1 ;
+                                        System.out.println("Number" + studentIndex++ + " :");
                                         System.out.println("Student name: " + students.getName());
                                         System.out.println("Student ID: " + students.getID());
                                     }
@@ -410,7 +418,7 @@ public class Main {
                                     }
                                     System.out.println("This class information:");
                                     System.out.println("Class code: " + class4.getClassCode());
-                                    System.out.println("Class subject: " + class4.getClassSubject());
+                                    System.out.println("Class subject: " + class4.getClassSubject().getSubjectName());
                                     break;
 
                                 case "14":
@@ -427,7 +435,7 @@ public class Main {
                                     break;
 
                                 case "15":
-                                    //TODO: not done yet
+
                                     break;
 
                                 case "16":

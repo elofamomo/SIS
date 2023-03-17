@@ -2,7 +2,6 @@ package org.hust.sis;
 
 import org.hust.sis.dao.SisDataAccess;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -84,8 +83,8 @@ public class SisSystem {
         return sisDAO.convertSubjectNameToSubject(subjectName);
     }
 
-    public Subject convertSubjectCodeToSubject(String subjectCode) {
-       return sisDAO.convertSubjectCodeToSubject(subjectCode);
+    public Subject convertSubjectCodetoSubject(String subjectCode) {
+        return sisDAO.convertSubjectCodetoSubject(subjectCode);
     }
 
     public Class convertClassCodetoClass(String classCode1) {
@@ -132,7 +131,8 @@ public class SisSystem {
         // TODO: sua tai DAO
         sisDAO.deleteStudent(student);
     }
-//
+
+    //
     public void deleteClass(Class class1) {
         sisDAO.deleteClass(class1);
     }
@@ -158,6 +158,45 @@ public class SisSystem {
         return sisDAO.findStudentByClass(class1);
     }
 
+    public boolean checkExistingClassId(String classID) {
+        for (Class class1 : sisDAO.getClasses()) {
+            if (class1.getClassCode().equals(classID)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean checkExistingUser(String studentID, String studentUsername) {
+        for (User user1 : sisDAO.getUsers()) {
+            if (user1.getID().equals(studentID) || user1.getUsername().equals(studentUsername)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean checkExistingSubjectCode(String subjectCode) {
+        for (Subject subject : sisDAO.getSubjects()) {
+            if (subjectCode.equals(subject.getSubjectCode())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean checkExistingSubjectName(String subjectName) {
+        for (Subject subject : sisDAO.getSubjects()) {
+            if (subjectName.equals(subject.getSubjectName())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void addGrades(Student student, Class class1, Float point) {
+        sisDAO.addGrades(student, class1, point);
+    }
 
 //    public List<Class> getClassesListByASubject(Subject subject) {
 //        List<Class> classesBySubject = new ArrayList<>();

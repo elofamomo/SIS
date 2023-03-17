@@ -76,6 +76,11 @@ public class CsvFileSisDataAccess implements SisDataAccess {
     }
 
     @Override
+    public Subject findSubjectByCode(String code) {
+        return null;
+    }
+
+    @Override
     public void enroll(User user, Class class1) {
 
     }
@@ -120,6 +125,43 @@ public class CsvFileSisDataAccess implements SisDataAccess {
             ioe.printStackTrace();
         }
         return users;
+    }
+
+    @Override
+    public List<Class> getClasses() {
+        return null;
+    }
+
+    @Override
+    public List<Subject> getSubjects() {
+        return null;
+    }
+
+    @Override
+    public void deleteSubject(Subject subject) {
+
+    }
+
+    @Override
+    public List<Student> findStudentsByClass(Class class1) {
+        return null;
+    }
+
+    @Override
+    public void addGrades(Student student, Class class1, Float grade) {
+
+    }
+
+    @Override
+    public Subject convertSubjectNameToSubject(String subjectName) {
+        return null;
+    }
+
+
+
+    @Override
+    public List<Student> findStudentByClass(Class class1) {
+        return null;
     }
 
     @Override

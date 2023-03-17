@@ -23,6 +23,7 @@ public class Class {
        return classSubject;
    }
 
+
     public void setClassCode(String classCode) {
         this.classCode = classCode;
     }

@@ -1,7 +1,7 @@
 package org.hust.sis.dao;
 
-import org.hust.sis.*;
 import org.hust.sis.Class;
+import org.hust.sis.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -75,6 +75,16 @@ public class InMemorySisDataAccess implements SisDataAccess {
     }
 
     @Override
+    public List<Class> getClasses() {
+        return classes;
+    }
+
+    @Override
+    public List<Subject> getSubjects() {
+        return subjects;
+    }
+
+    @Override
     public void deleteSubject(Subject subject) {
         subjects.remove(subject);
     }
@@ -82,6 +92,11 @@ public class InMemorySisDataAccess implements SisDataAccess {
     @Override
     public List<Student> findStudentsByClass(Class class1) {
         return null;
+    }
+
+    @Override
+    public void addGrades(Student student, Class class1, Float grade) {
+
     }
 
     @Override
@@ -94,14 +109,17 @@ public class InMemorySisDataAccess implements SisDataAccess {
         return null;
     }
 
+
+
     @Override
-    public Subject convertSubjectCodeToSubject(String subjectCode) {
-        for (Subject subject : subjects) {
-            if (subject.getSubjectCode().equals(subjectCode)) {
-                return subject;
+    public List<Student> findStudentByClass(Class class1) {
+        List<Student> studentsByClass = new ArrayList<>();
+        for (Map.Entry<User, List<Class>> entry : enrollment.entrySet()) {
+            if (entry.getValue().contains(class1)) {
+                studentsByClass.add((Student) entry.getKey());
             }
         }
-        return null;
+        return studentsByClass;
     }
 
 
@@ -112,6 +130,11 @@ public class InMemorySisDataAccess implements SisDataAccess {
 
     @Override
     public Subject convertSubjectCodetoSubject(String subjectCode) {
+        for (Subject subject : subjects) {
+            if (subject.getSubjectCode().equals(subjectCode)) {
+                return subject;
+            }
+        }
         return null;
     }
 
