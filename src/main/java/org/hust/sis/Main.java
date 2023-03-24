@@ -1,7 +1,6 @@
 package org.hust.sis;
 
 import org.hust.sis.dao.InMemorySisDataAccess;
-import org.hust.sis.dao.SQLiteDBFileSisDataAccess;
 import org.hust.sis.dao.SisDataAccess;
 
 import java.util.Scanner;
@@ -12,25 +11,24 @@ public class Main {
 
 
     static {
-        SisDataAccess sisDAO = new SQLiteDBFileSisDataAccess();
+        SisDataAccess sisDAO = new InMemorySisDataAccess();
 
+        Student student = new Student("Truong The Dung", "20182451", "dungtt76", "dungtt76");
+        sisDAO.addUser(student);
+        sisDAO.addUser(new Manager("Truong Thi Huong Huong", "11360", "huongdouble", "huongdouble"));
 
-//        sisDAO.addUser(student);
-//        sisDAO.addUser(new Manager("Truong Thi Huong Huong", "11360", "huongdouble", "huongdouble"));
-//
+        sisDAO.addClass(new Class("ET2010", sisDAO.convertSubjectCodetoSubject("ET")));
+        sisDAO.addClass(new Class("IT2010" , sisDAO.convertSubjectCodetoSubject("IT")));
+        sisDAO.addClass(new Class("BE2010", sisDAO.convertSubjectCodetoSubject("BE")));
 
-//
-//
+        sisDAO.addPreviousSemesterClass(new Class("ET2009", sisDAO.convertSubjectCodetoSubject("ET")));
+        sisDAO.addPreviousSemesterClass(new Class("IT2009", sisDAO.convertSubjectCodetoSubject("IT")));
+        sisDAO.addPreviousSemesterClass(new Class("BE2009", sisDAO.convertSubjectCodetoSubject("BE")));
 
-//
-//        sisDAO.addPreviousSemesterClass(new Class("ET2009", sisDAO.convertSubjectCodetoSubject("ET")));
-//        sisDAO.addPreviousSemesterClass(new Class("IT2009", sisDAO.convertSubjectCodetoSubject("IT")));
-//        sisDAO.addPreviousSemesterClass(new Class("BE2009", sisDAO.convertSubjectCodetoSubject("BE")));
-//
-//        sisDAO.enroll(student2 , sisDAO.convertClassCodetoClass("ET2010"));
-//        sisDAO.updateStudentGrades(student, sisDAO.convertClassCodetoClass("ET2009"), 10.0f);
-//        sisDAO.updateStudentGrades(student, sisDAO.convertClassCodetoClass("IT2009"), 9.0f);
-//        sisDAO.updateStudentGrades(student, sisDAO.convertClassCodetoClass("BE2009"), 8.0f);
+        sisDAO.enroll(student, sisDAO.convertClassCodetoClass("ET2010"));
+        sisDAO.updateStudentGrades(student, sisDAO.convertClassCodetoClass("ET2009"), 10.0f);
+        sisDAO.updateStudentGrades(student, sisDAO.convertClassCodetoClass("IT2009"), 9.0f);
+        sisDAO.updateStudentGrades(student, sisDAO.convertClassCodetoClass("BE2009"), 8.0f);
 
         system = new SisSystem(sisDAO);
     }
@@ -85,9 +83,13 @@ public class Main {
                                     break;
                                 case "2":
                                     System.out.println("Here list of class you have enrolled:");
-                                    for (Class i : system.getClassesByUser(student)) {
-                                        System.out.println(i.getClassCode());
+                                    if (system.getClassesByUser(student) != null) {
+                                        for (Class i : system.getClassesByUser(student)) {
+                                            System.out.println(i.getClassCode());
+                                        }
                                     }
+
+
                                     break;
                                 case "3":
                                     System.out.println("Here list of classes you can enroll:");
@@ -148,9 +150,8 @@ public class Main {
                             System.out.println("11.Find the student by student name");
                             System.out.println("12.Find the student by the class");
                             System.out.println("13.Find a class by the class ID");
-                            System.out.println("14.Find subject by the subject ID|");
-                            System.out.println("15.Update grades");
-                            System.out.println("16.Log out");
+                            System.out.println("14.Find subject by the subject ID");
+                            System.out.println("15.Log out");
 
                             String choice = scanner.next();
                             scanner.nextLine();
@@ -433,19 +434,10 @@ public class Main {
                                     System.out.println("Subject code: " + subject3.getSubjectCode());
                                     System.out.println("Subject name: " + subject3.getSubjectName());
                                     break;
-
                                 case "15":
-
-                                    break;
-
-                                case "16":
                                     break login;
-
-
                             }
-
                         }
-
                     }
                     break;
                 case "2":
